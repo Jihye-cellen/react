@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=Jua&family=Nanum+Gothic&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@100..900&display=swap');
+
+*{
+  font-family: "Do Hyeon", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.bookSearch img{
+  cursor:pointer;
+}
+
+.userLogin .title, .orderPage .title{
+  width: 100px;
+
+}
+
+.bookSearch .cart{
+  font-size: 20px;
+  color:blue;
+  cursor:pointer;
+}
+
+.bookSearch .cart:hover{
+  color:red;
+}
+
+.myPage .title{
+  width: 100px;
+  justify-content: center;
+
+}
+
+.myPage img{
+  border-radius: 50%;
+  cursor:pointer;
+  margin: 10px 0px;
+}
+
+.ellipsis2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.userLogin .title{
+  width: 100;
+}
+
+.myPage .title{
+  width: 100;
+}
+
+.myPage img{
+  border-radius: 50%;
+  cursor:pointer;
+  margin-bottom: 10px;
+  border: 1px solid black;
+}
+
+.update .title{
+  width: 100;
+}
+
+.heart{
+  cursor: pointer;
+  color:red
+}
+
+
+
