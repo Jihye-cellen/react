@@ -15,7 +15,7 @@ const UpdatePage = () => {
     const{title, contents} = form
 
     const callAPI=async()=>{
-        const res =await axios.get(`/bbs/${bid}`);
+        const res =await axios.get(`/bbs/${bid}?isCnt=false`);
         setForm(res.data);
         console.log(res.data);
     }
@@ -33,7 +33,7 @@ const UpdatePage = () => {
         e.preventDefault();
         if(!window.confirm("변경된 내용을 수정하시겠습니까?")) return;
         await axios.post('/bbs/update', form);
-        navi(-1);
+        navi("/bbs/list");
 
     }
     useEffect(()=>{
