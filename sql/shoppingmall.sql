@@ -225,7 +225,35 @@ select count(*) from bbs;
 create view view_bbs as
 select b.*, u.uname, u.photo from bbs b, users u where b.uid=u.uid;
 
+select * from view_bbs;
+
+select bid, viewcnt from bbs where bid=250;
+
 select *, date_format(regDate, '%Y년%m월%d일 %T') as fmtdate from view_bbs where uname like '%이%' order by bid desc limit 0, 5;
 
 update bbs set contents='타임리프에서 a태그를 사용시, 파라미터로 넘길 시 th:href="@{/hello/{param1}/{param2}(param1=${param1}, param2=${param2})}"
-/hello/data1/data2를 사용한다. ' where bid=207;
+/hello/data1/data2를 사용한다. ' where bid=218;
+
+alter table bbs add column viewcnt int default 0;
+
+drop view view_bbs;
+
+
+create table reply(
+	rid int auto_increment primary key,
+    bid int not null,
+    uid varchar(20) not null,
+    regDate datetime default now(),
+    contents text,
+	foreign key (bid) references bbs(bid),
+    foreign key (uid) references users(uid)
+);
+
+select * from reply;
+
+insert into reply (bid, uid, contents)
+select bid, uid, contents from reply;
+
+select count(*) from reply;
+
+select r.*, u.uname, u.photo  from reply r, users u where r.uid = u.uid;

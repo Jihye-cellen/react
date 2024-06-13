@@ -2,15 +2,16 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {Row, Col, Card, Button} from 'react-bootstrap'
+import ReplyPage from './ReplyPage';
 
 const ReadPage = () => {
     const [form, setForm]=useState("");
     const {bid} =useParams();
-    console.log(bid);
+    //console.log(bid);
 
     const callAPI=async()=>{
         const res = await axios.get(`/bbs/${bid}?isCnt=true`);
-        console.log(res.data);
+        //console.log(res.data);
         setForm(res.data);
     }
 
@@ -56,6 +57,7 @@ const ReadPage = () => {
                 }
             </Col>
         </Row>
+        <ReplyPage bid={bid}/>
     </div>
   )
 }

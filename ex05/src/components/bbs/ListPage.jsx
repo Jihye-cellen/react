@@ -71,7 +71,7 @@ const ListPage = () => {
             {list.map(bbs=>
                 <tr key={bbs.bid}>
                     <td>{bbs.bid}</td>
-                    <td><a href={`/bbs/read/${bbs.bid}`}>{bbs.title}</a></td>
+                    <td><a href={`/bbs/read/${bbs.bid}`}>{bbs.title} [{bbs.replyCnt}]</a></td>
                     <td>{bbs.uid}({bbs.uname})</td>
                     <td>{bbs.fmtdate}</td>
                     <td>{bbs.viewcnt}</td>
