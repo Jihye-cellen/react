@@ -27,6 +27,7 @@ const onSubmit = async(e)=>{
     alert("로그인 성공!");
     sessionStorage.setItem("uid", res.data.uid);
     sessionStorage.setItem("uname", res.data.uname);
+    sessionStorage.setItem("photo", res.data.photo);
 
       if(sessionStorage.getItem("target")){
         window.location.href=sessionStorage.getItem("target");

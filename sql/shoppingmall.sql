@@ -17,6 +17,7 @@ insert into users (uid, uname, upass) values ('purple', '유보라', 'pass');
 insert into users (uid, uname, upass) values ('admin', '관리자', 'pass');
 
 select * from users;
+update users set photo='/upload/photo/a01.png' where uid='red';
 
 update users set phone ='010-2020-3030', address1='서울시 금천구 가산동 가산원앤원아파트', address2 ='206동 101호' where uid = 'green';
 
@@ -254,6 +255,31 @@ select * from reply;
 insert into reply (bid, uid, contents)
 select bid, uid, contents from reply;
 
-select count(*) from reply;
+select count(*) from view_reply;
 
-select r.*, u.uname, u.photo  from reply r, users u where r.uid = u.uid;
+select * from view_reply;
+
+drop view view_reply;
+
+create view view_reply as
+select r.*, u.uname, u.photo, date_format(r.regDate, '%Y년%m월%d일 %T') as fmtdate, date_format(r.updateDate, '%Y년%m월%d일 %T') as fmtUpdate
+from reply r, users u where r.uid = u.uid;
+
+update reply set contents='스프링 정말 어렵긴 하네요', regDate=now() where rid=183; 
+
+select * from view_reply where bid=218 order by rid desc limit 0,5;
+
+alter table reply add column updateDate datetime;
+alter table bbs add column replyCnt int default 0;
+alter table reply add column rating int default 0;
+desc reply;
+
+desc view_reply;
+
+update reply set rating=3 where bid > 0;
+
+select rid, rating from reply;
+
+update bbs set replyCnt=(select count(*) from reply where bbs.bid=reply.bid) where bid>0;
+
+update users set photo=null where uid > '';

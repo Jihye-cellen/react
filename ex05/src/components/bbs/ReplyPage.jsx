@@ -5,6 +5,7 @@ import {Row, Col, Form, Button} from 'react-bootstrap'
 import '../pagination.css';
 import  Pagination from 'react-js-pagination'
 import { useLocation } from 'react-router-dom';
+import Stars from '../common/Stars';
 
 const ReplyPage = ({bid}) => {
     const [list, setList] =useState([]);
@@ -14,12 +15,13 @@ const ReplyPage = ({bid}) => {
     const {pathname} = useLocation();
     const [contents, setContents] =useState("");
     const uid=sessionStorage.getItem("uid");
+    const [rating, setRating] = useState(0);
     
 
     const callAPI=async()=>{
         const res = await axios.get(`/reply/list.json?bid=${bid}&page=${page}&size=${size}`);
         console.log(res.data);
-        const data=res.data.documents.map(doc=>doc && {...doc, isEllip:true, isEdit:false, text:doc.contents});
+        const data=res.data.documents.map(doc=>doc && {...doc, isEllip:true, isEdit:false, text:doc.contents, num:doc.rating});
         setList(data);
         setCount(res.data.total);
     }
@@ -39,8 +41,9 @@ const ReplyPage = ({bid}) => {
             alert("댓글 내용을 입력하세요!");
             return;
         }
-        await axios.post('/reply/insert', {bid, contents, uid})
+        await axios.post('/reply/insert', {bid, contents, uid, rating})
         setContents('');
+        setRating(0);
         callAPI();
     }
 
@@ -66,9 +69,9 @@ const ReplyPage = ({bid}) => {
     }
 
     const onClickSave =async(reply)=>{
-        if(reply.contents!==reply.text){
+        if(reply.contents!==reply.text || reply.num !== reply.rating){
             if(!window.confirm("댓글을 수정하시겠습니까?")) return;
-            await axios.post('/reply/update', {rid:reply.rid, contents:reply.contents});
+            await axios.post('/reply/update', {rid:reply.rid, contents:reply.contents, rating:reply.rating});
         }
         callAPI();
     }
@@ -79,12 +82,29 @@ const ReplyPage = ({bid}) => {
         }
         callAPI();
     }
+
+
+    const getRating=(rating)=>{
+        console.log("....", rating);
+        setRating(rating);
+    } //댓글에 저장 시, 데이터에 저장할 수 있게끔 자식에서 데이터를 가져올 때의 기능
+
+    const getUserRating = (rating, rid) =>{
+        console.log(rating, '...........', rid);
+        const data = list.map(reply=>reply.rid === rid ? {...reply, rating:rating} : reply);
+        setList(data);
+    } //유저별 댓글 수정 시 
+
+
   return (
     <div className='my-5'>
         <Row className='justify-content-center'>
             <Col xs={12} md={10} lg={8}>
             {sessionStorage.getItem("uid") ?
                 <div className='mb-5'>
+                    <div>
+                        <Stars size={'30px'} number={rating} disabled={false} getRating={getRating}/>
+                    </div>
                     <Form.Control as="textarea" rows={5} value={contents} onChange={(e)=>setContents(e.target.value)}/>
                     <div className='text-end mt-3'>
                         <Button variant='dark' className='px-3' size="sm" onClick={onClickInsertReply}>등록</Button>
@@ -99,10 +119,14 @@ const ReplyPage = ({bid}) => {
                 {list.map(reply=>
                 <div key={reply.rid}>
                     <Row>
-                        <Col className='mb-2' xs={10}>
-                            <span style={{color:'black', fontSize:"16px"}} className='me-2'>{reply.uname}({reply.uid}) |</span>
-                            <span style={{color:'blue', fontSize:"13px"}}>{reply.fmtdate} </span>
-                            {reply.fmtUpdate && <span style={{color:'red', fontSize:"13px"}}>({reply.fmtUpdate})</span>}
+                        <Col className='mb-2' xs={6}>
+                            <span style={{color:'black', fontSize:"16px"}} className='me-2'>{reply.rid}| {reply.uname}({reply.uid}) |</span>
+                            <Stars getRating={(e)=>getUserRating(e, reply.rid)} 
+                                size={'15px'} number={reply.rating} disabled={(reply.uid!==uid || !reply.isEdit) && true}/>
+                            <div>
+                                <span style={{color:'blue', fontSize:"12px"}}>{reply.fmtdate} </span>
+                                {reply.fmtUpdate && <span style={{color:'red', fontSize:"12px"}}>({reply.fmtUpdate})</span>}
+                            </div>
                         </Col>
                         {uid===reply.uid && !reply.isEdit &&
                             <Col className='text-end mb-2'>
