@@ -3,6 +3,8 @@ import { Link, Route, Routes } from 'react-router-dom'
 import Home from './Home'
 import BBSRouter from './router/BBSRouter'
 import UserRouter from './router/UserRouter'
+import MessageRouter from './router/MessageRouter'
+import MessagePage from './message/MessagePage'
 
 const MenuPage = () => {
   const photo = sessionStorage.getItem("photo") && `/display?file=${sessionStorage.getItem("photo")}`;
@@ -20,8 +22,10 @@ const MenuPage = () => {
     <div>
         <Link to="/" className='me-5'>HOME</Link>
         <Link to="/bbs/list" className='me-5'>게시판</Link>
+
         {uid ?
           <>
+          <Link to="/message/" className='me-5'>메일함</Link>
           <Link to="/users/read" className='me-2'>
             <img src={photo || "http://via.placeholder.com/50x50"} width="40px" style={{border:'1px solid gray'}} className='me-2'/>
           {uname}님</Link>
@@ -39,6 +43,7 @@ const MenuPage = () => {
             <Route path="/" element={<Home/>}/>
             <Route path="/bbs/*" element={<BBSRouter/>}/>
             <Route path="/users/*" element={<UserRouter/>}/>
+            <Route path="/message/*" element={<MessagePage/>}/> 
        </Routes>
     </div>
   )

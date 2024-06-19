@@ -283,3 +283,101 @@ select rid, rating from reply;
 update bbs set replyCnt=(select count(*) from reply where bbs.bid=reply.bid) where bid>0;
 
 update users set photo=null where uid > '';
+
+
+create table messages (
+	mid int auto_increment primary key,
+    sender varchar(20) not null,
+    receiver varchar(20) not null,
+	message text,
+    sendDate datetime default now(),
+    readData datetime, 
+    foreign key (sender) references users(uid),
+    foreign key (receiver) references users(uid)
+
+);
+
+desc messages;
+
+select * from messages;
+
+alter table users add column point int default 0;
+alter table messages drop column point;
+alter table messages add column sendDelete int default 0;
+alter table messages add column ReceiveDelete int default 0;
+
+select uid, point from users where uid='blue';
+
+
+/*보낸메세지*/
+select m.*, u.uname, u.photo from messages m, users u where m.receiver = u.uid and mid=1;
+
+/*받은메세지*/
+select m.*, u.uname, u.photo from messages m, users u where m.sender = u.uid and mid=1;
+
+/*보낸메시지목록*/
+select m.*, u.uname from messages m, users u where sender='blue' and u.uid=m.receiver order by mid desc;
+
+/*받은메시지목록*/
+select m.*, u.uname from messages m, users u where receiver='blue' and u.uid=m.sender order by mid desc;
+
+select m.*, u.uname from messages m, users u where receiver='red' and u.uid=m.sender and receiveDelete=0 order by mid desc;
+select * from (select m.*, u.uname from messages m, users u where u.uid=m.receiver or u.uid=m.sender) as messageDelete 
+where (sendDelete=1 or ReceiveDelete=1) and uname='서레드' ;
+
+/*휴지통목록*/
+select * from messages where (sender='red' or receiver='red') and (sendDelete=1 or ReceiveDelete=1);
+
+drop table account;
+create table account(
+	ano char(4) primary key not null,
+    uid varchar(20),
+    openDate datetime default now(),
+    balance double default 0, /*잔액*/
+    foreign key (uid) references users(uid)
+);
+
+desc account;
+
+drop table trade;
+create table trade(
+	tid int auto_increment primary key,
+	ano char(4) not null,
+    tno char(4) ,
+    amount double, /*거래시 금액*/
+    tradeDate datetime default now(),
+    type int default 1, /*1:입금 -1:출금 */
+    foreign key(ano) references account(ano),
+    foreign key(tno) references account(ano)
+);
+
+desc trade;
+
+/*통장개설*/
+insert into account (ano, uid) values ('A001', 'red');
+insert into account (ano, uid) values ('A002', 'blue');
+insert into account (ano, uid) values ('A003', 'black');
+
+select * from account;
+
+/*내통장에 입금*/
+insert into trade(ano, amount) values ('A001', 2000);
+update account set balance=balance + 2000 where ano='A001';
+
+/*내통장에 출금*/
+insert into trade(ano, amount, type) values ('A001', 1000, -1);
+update account set balance=balance - 1000 where ano='A001';
+
+/*A001 이 A002로 500원 이체*/
+insert into trade(ano, tno, amount, type) value ('A001', 'A002', 500, -1); 
+insert into trade(ano, tno, amount, type) value ('A002', 'A001', 500, 1); 
+update account set balance=balance + 500 where ano='A002';
+update account set balance=balance - 500 where ano='A001';
+
+
+select *, format(amount, 0) fmtAmount from trade where ano='A002';
+
+/*tno가 전부 나올 수 있게 left 조인*/
+select trade.*, format(amount,0) fmtAmount, uid
+from trade left join account
+on trade.tno=account.ano where trade.ano='A001';
