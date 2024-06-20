@@ -65,18 +65,18 @@ const ListPage = () => {
               <td>학년</td>
               <td>학과</td>
               <td>담당교수</td>
-              <td>학생코드</td>
+              <td>생년월일</td>
               <td></td>
             </tr>
           </thead>
           <tbody>
             {list.map(stu =>
               <tr key={stu.scode}>
-                <td>{stu.scode}</td>
+                <td><Link to={`/stu/read/${stu.scode}`}>{stu.scode}</Link></td>
                 <td>{stu.sname}</td>
                 <td>{stu.year}</td>
                 <td>{stu.dept}</td>
-                <td>{stu.pname}({stu.advisor})</td>
+                <td>{stu.pname && `${stu.pname}(${stu.advisor})`}</td>
                 <td>{stu.birthday}</td>
                 <td><Button onClick={()=>onClickDelete(stu.scode)} size="sm" variant='outline-danger'>삭제</Button></td>
               </tr>

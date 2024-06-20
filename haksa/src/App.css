@@ -9,3 +9,8 @@
 h1{
   text-align: center;
 }
+
+.table .thead{
+  background-color: lightcyan;
+  text-align: center;
+}
