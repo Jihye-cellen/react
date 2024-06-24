@@ -18,9 +18,13 @@ const Box = ({box, setBox}) => {
       fontSize:'2rem'
   }
 
-    const onClose = ()=>{
-        setBox({...box, show:false});
+      //확인버튼
+  const onClose = () => {
+    if(box.action2) {
+      box.action2();
     }
+    setBox({...box, show:false});
+  }
 
     const onAction = ()=>{
       box.action();

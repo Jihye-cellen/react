@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { Table } from 'react-bootstrap';
+import EnrollList from './EnrollList';
 
 const ReadPage = () => {
     const {lcode}=useParams();
@@ -43,6 +44,7 @@ const ReadPage = () => {
                 </tr>
             </tbody>
         </Table>
+        <EnrollList lcode={lcode}/>
     </div>
   )
 }
