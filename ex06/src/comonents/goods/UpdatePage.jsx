@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import {Row, Col, InputGroup, Form, Button, Card} from 'react-bootstrap'
 import Detail from './Detail';
+import { IoMdReturnLeft } from 'react-icons/io';
 
 const UpdatePage = () => {
     const [loading, setLoading] =useState(false);
@@ -80,6 +81,8 @@ const UpdatePage = () => {
     useEffect(()=>{
         callAPI();
     },[]);
+
+   
 
     if(loading) return <h1 className='text-center'>로딩중</h1>
   return (
